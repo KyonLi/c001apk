@@ -24,14 +24,18 @@ jobs:
         with:
           arguments: assembleRelease
 
-      - name: Tag
+      - name: Generate release tag
+        id: version
         run: |
-          git tag $(git rev-parse --verify --short HEAD)
-          git push origin $(git rev-parse --verify --short HEAD)
+          TAG_NAME=$(git rev-parse --verify --short HEAD)
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
 
       - name: Releases
         uses: softprops/action-gh-release@v2
         with:
           body: Bump Version
+          tag_name: ${{ steps.version.outputs.TAG_NAME }}
           files: |
             app/build/outputs/apk/release/*.apk
