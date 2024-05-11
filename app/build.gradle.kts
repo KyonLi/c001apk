@@ -87,19 +87,17 @@ android {
         if (properties.exists())
             it.load(properties.inputStream())
     }
-    val config = localProperties.getProperty("KEYSTORE_PATH")?.let {
-        signingConfigs.create("release") {
-            storeFile = file(it)
-            storePassword = localProperties.getProperty("KEYSTORE_PASSWORD")
-            keyAlias = localProperties.getProperty("KEY_ALIAS")
-            keyPassword = localProperties.getProperty("KEY_PASSWORD")
-            enableV2Signing = true
-            enableV3Signing = true
-        }
+    val signConfig = signingConfigs.create("release") {
+        storeFile = File(projectDir.path + "/keystore/androidkey.jks")
+        storePassword = "000000"
+        keyAlias = "key0"
+        keyPassword = "000000"
+        enableV3Signing = true
+        enableV4Signing = true
     }
     buildTypes {
         all {
-            signingConfig = config ?: signingConfigs["debug"]
+            signingConfig = signConfig
         }
         release {
             isMinifyEnabled = true
