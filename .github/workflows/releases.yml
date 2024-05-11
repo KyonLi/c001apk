@@ -24,6 +24,11 @@ jobs:
         with:
           arguments: assembleRelease
 
+      - name: Tag
+        run: |
+          git tag $(git rev-parse --verify --short HEAD)
+          git push origin $(git rev-parse --verify --short HEAD)
+
       - name: Releases
         uses: softprops/action-gh-release@v2
         with:
